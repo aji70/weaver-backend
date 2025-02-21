@@ -7,27 +7,20 @@ const { MongoMemoryServer } = require("mongodb-memory-server");
 let mongoServer;
 
 beforeAll(async () => {
-    // Disconnect any active database connections before running tests
-    await mongoose.disconnect();
-
-    // Start an in-memory MongoDB instance for testing
+    // Start an in-memory MongoDB instance
     mongoServer = await MongoMemoryServer.create();
-    await mongoose.connect(mongoServer.getUri(), {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    });
+    await mongoose.connect(mongoServer.getUri(), { useNewUrlParser: true, useUnifiedTopology: true });
 });
 
 afterAll(async () => {
-    // Clean up the database and close the connection after tests
-    await mongoose.connection.dropDatabase();
+    // Close database connection and stop the in-memory server
     await mongoose.connection.close();
     await mongoServer.stop();
 });
 
 describe("User API Endpoints", () => {
     beforeEach(async () => {
-        // Clear the users collection before each test
+        // Clear the database before each test
         await User.deleteMany();
     });
 
@@ -36,12 +29,11 @@ describe("User API Endpoints", () => {
             address: "0x123",
             username: "TestUser",
         });
-    
+
         expect(response.status).toBe(201);
         expect(response.body.user).toHaveProperty("_id");
         expect(response.body.user.username).toBe("TestUser");
     });
-    
 
     test("Should prevent duplicate user registration", async () => {
         // Create a user before sending another request with the same address
@@ -57,7 +49,6 @@ describe("User API Endpoints", () => {
     });
 
     test("Should retrieve user profile", async () => {
-        // Create a user before retrieving the profile
         await User.create({ address: "0x123", username: "TestUser" });
 
         const response = await request(app).get("/api/profile/0x123");
@@ -71,5 +62,20 @@ describe("User API Endpoints", () => {
 
         expect(response.status).toBe(404);
         expect(response.body.message).toBe("User not found");
+    });
+
+    test("Should retrieve all users", async () => {
+        await User.create([
+            { address: "0x123", username: "User1", score: 10 },
+            { address: "0x456", username: "User2", score: 20 },
+        ]);
+
+        const response = await request(app).get("/api/users");
+
+        expect(response.status).toBe(200);
+        expect(response.body.length).toBe(2);
+        expect(response.body[0]).toHaveProperty("address");
+        expect(response.body[0]).toHaveProperty("username");
+        expect(response.body[0]).toHaveProperty("score");
     });
 });
