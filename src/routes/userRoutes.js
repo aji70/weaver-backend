@@ -1,10 +1,10 @@
 const express = require("express");
-const router = express.Router();
-const userController = require("../controllers/userController");
+const { registerUser, getUserProfile, getUserScore } = require("../controllers/userController");
 
-// Rotas chamando as funções do controller
-router.post("/register", userController.registerUser);
-router.get("/profile/:address", userController.getUserProfile);
-router.get("/score/:address", userController.getUserScore);
+const router = express.Router();
+
+router.post("/register", registerUser);
+router.get("/profile/:address", getUserProfile);
+router.get("/score/:address", getUserScore);
 
 module.exports = router;
