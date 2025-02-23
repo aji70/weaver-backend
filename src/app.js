@@ -35,6 +35,13 @@ app.get("/", (req, res) => {
 
 const userRoutes = require("./routes/userRoutes");
 app.use("/api", userRoutes);
+app.use("/api/users", require("./routes/userRoutes"));
+app.use("/api/organizations", require("./routes/organizationRoutes"));
+app.use("/api/reputation", require("./routes/reputationRoutes"));
+app.use("/api/nfts", require("./routes/nftRoutes"));
+
+// Error Handler
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
