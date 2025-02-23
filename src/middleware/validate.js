@@ -14,3 +14,19 @@ const validate = (schema) => {
         }
     };
 };
+const userValidation = {
+    register: {
+        address: {
+            type: String,
+            required: true,
+            length: 66, // Starknet address length
+        },
+        username: {
+            type: String,
+            required: true,
+            minLength: 3,
+            maxLength: 30,
+        },
+    },
+};
+module.exports = { validate, userValidation };
