@@ -11,7 +11,19 @@ const userSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-    },
+        reputationScore: {
+            type: Number,
+            default: 0
+        },
+        verifiedActions: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Reputation'
+        }],
+        ownedNFTs: [{
+        type: Schema.Types.ObjectId,
+        ref: 'NFT'
+          }],
+  },
     { timestamps: true }
 );
 
