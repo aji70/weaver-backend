@@ -8,23 +8,24 @@ require("dotenv").config();
 const app = express();
 app.use(express.json());
 
-// Middlewares
+// Middleware for security
 app.use(helmet());
 app.use(cors());
 
-// Rate limiting
+// Rate limiting to prevent abuse
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 100 // limit each IP to 100 requests per windowMs
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100 // Limit each IP to 100 requests per windowMs
 });
 app.use(limiter);
 
-// Database connection (evitando conectar no ambiente de teste)
+// Database connection (only connects if not in test environment)
 if (process.env.NODE_ENV !== "test") {
     mongoose.connect(process.env.MONGO_URI)
         .then(() => console.log("Connected to MongoDB"))
         .catch((err) => console.error("Could not connect to MongoDB:", err));
 
+    // Start the server only if not in test mode
     const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`);
