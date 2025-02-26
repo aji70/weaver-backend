@@ -23,6 +23,10 @@ const userSchema = new mongoose.Schema(
         type: Schema.Types.ObjectId,
         ref: 'NFT'
           }],
+          score: {
+            type: Number,
+            default: 0, 
+        },
   },
     { timestamps: true }
 );
