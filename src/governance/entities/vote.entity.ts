@@ -1,10 +1,17 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { Proposal } from './proposal.entity';
 
 export enum VoteType {
   FOR = 'for',
   AGAINST = 'against',
-  ABSTAIN = 'abstain'
+  ABSTAIN = 'abstain',
 }
 
 @Entity('votes')
@@ -17,7 +24,7 @@ export class Vote {
 
   @Column({
     type: 'enum',
-    enum: VoteType
+    enum: VoteType,
   })
   voteType: VoteType;
 
@@ -30,7 +37,7 @@ export class Vote {
   @Column()
   proposalId: string;
 
-  @ManyToOne(() => Proposal, proposal => proposal.votes)
+  @ManyToOne(() => Proposal, (proposal) => proposal.votes)
   @JoinColumn({ name: 'proposalId' })
   proposal: Proposal;
 
@@ -39,4 +46,7 @@ export class Vote {
 
   @CreateDateColumn()
   createdAt: Date;
-} 
+  weight: number;
+  choice: any;
+  voter: any;
+}
