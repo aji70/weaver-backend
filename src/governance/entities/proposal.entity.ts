@@ -1,10 +1,18 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToMany,
+} from 'typeorm';
 import { Vote } from './vote.entity';
 
 export enum ProposalStatus {
   ACTIVE = 'active',
   CLOSED = 'closed',
-  CANCELLED = 'cancelled'
+  CANCELLED = 'cancelled',
+  EXECUTED = 'EXECUTED',
 }
 
 @Entity('proposals')
@@ -21,7 +29,7 @@ export class Proposal {
   @Column({
     type: 'enum',
     enum: ProposalStatus,
-    default: ProposalStatus.ACTIVE
+    default: ProposalStatus.ACTIVE,
   })
   status: ProposalStatus;
 
@@ -34,7 +42,7 @@ export class Proposal {
   @Column({ type: 'timestamp' })
   endDate: Date;
 
-  @OneToMany(() => Vote, vote => vote.proposal)
+  @OneToMany(() => Vote, (vote) => vote.proposal)
   votes: Vote[];
 
   @CreateDateColumn()
@@ -42,4 +50,5 @@ export class Proposal {
 
   @UpdateDateColumn()
   updatedAt: Date;
-} 
+  finalOutcome: boolean;
+}

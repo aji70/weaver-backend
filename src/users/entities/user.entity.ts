@@ -24,6 +24,7 @@ export class User {
 
   @Prop({ default: 0 })
   score: number;
+  id: any;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
