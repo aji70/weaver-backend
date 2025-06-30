@@ -16,6 +16,7 @@ import {
   ReputationSchema,
 } from './reputation/entities/reputation.entity';
 import { Nft, NftSchema } from './nfts/entities/nft.entity';
+import { OnchainNotificationsModule } from './onchain-notifications/onchain-notifications.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { Nft, NftSchema } from './nfts/entities/nft.entity';
     OrganizationsModule,
     ReputationModule,
     NftsModule,
+    OnchainNotificationsModule,
   ],
 })
 export class AppModule {}
