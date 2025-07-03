@@ -1,11 +1,18 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToMany,
+} from 'typeorm';
 import { CampaignMilestone } from './campaign-milestone.entity';
 import { CampaignRule } from './campaign-rule.entity';
 
 export enum TemplateStatus {
   DRAFT = 'draft',
   ACTIVE = 'active',
-  ARCHIVED = 'archived'
+  ARCHIVED = 'archived',
 }
 
 @Entity('campaign_templates')
@@ -22,7 +29,7 @@ export class CampaignTemplate {
   @Column({
     type: 'enum',
     enum: TemplateStatus,
-    default: TemplateStatus.DRAFT
+    default: TemplateStatus.DRAFT,
   })
   status: TemplateStatus;
 
@@ -39,13 +46,18 @@ export class CampaignTemplate {
     userTypes: string[];
     minReputation?: number;
     requiredNfts?: string[];
+    kycRequirements?: {
+      required: boolean;
+      provider?: 'world_id' | 'privado_id' | 'hypersign';
+      verificationLevel?: 'device' | 'orb' | 'basic' | 'full_kyc';
+    };
     customConditions?: Record<string, any>;
   };
 
-  @OneToMany(() => CampaignMilestone, milestone => milestone.template)
+  @OneToMany(() => CampaignMilestone, (milestone) => milestone.template)
   milestones: CampaignMilestone[];
 
-  @OneToMany(() => CampaignRule, rule => rule.template)
+  @OneToMany(() => CampaignRule, (rule) => rule.template)
   rules: CampaignRule[];
 
   @Column('jsonb', { nullable: true })
@@ -59,4 +71,4 @@ export class CampaignTemplate {
 
   @UpdateDateColumn()
   updatedAt: Date;
-} 
+}
